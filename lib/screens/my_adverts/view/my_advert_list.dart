@@ -2,7 +2,6 @@ import 'package:dunya_evim/core/constants/enums/bloc_enums.dart';
 import 'package:dunya_evim/core/constants/path/image_path.dart';
 import 'package:dunya_evim/core/constants/size/paddings.dart';
 import 'package:dunya_evim/core/utils/translation/locale_keys.g.dart';
-import 'package:dunya_evim/screens/edit_advert/bloc/edit_advert_bloc.dart';
 import 'package:dunya_evim/screens/profile/bloc/profile_bloc.dart';
 import 'package:dunya_evim/src/text/body_title.dart';
 import 'package:flutter/material.dart';

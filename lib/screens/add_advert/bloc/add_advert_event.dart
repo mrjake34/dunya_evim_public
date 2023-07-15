@@ -160,3 +160,9 @@ class EmergenyExitEvent extends AddAdvertEvent {
 }
 
 class ClearBlocEvent extends AddAdvertEvent {}
+
+class SliderIndexEvent extends AddAdvertEvent {
+  final int? index;
+
+  SliderIndexEvent(this.index);
+}

@@ -72,12 +72,14 @@ class _AddAdvertReviewPageState extends State<AddAdvertReviewPage> {
           listener: (context, state) {
             if (state.advertDatasUploaded == Status.success) {
               context.read<ProfileBloc>().add(AddAdvertToMyAdvertList(docId: state.docId));
-              context.read<AddAdvertBloc>().add(ClearBlocEvent());
+              context.read<AddAdvertBloc>().clear();
               CustomDialog().showCustomDialogError(
                 context: context,
-                buttonFunction: () => NavigationService.instance.navigateToPageAndRemoveUntil(
-                  path: RoutersConstants.home,
-                ),
+                buttonFunction: () {
+                  NavigationService.instance.navigateToPageAndRemoveUntil(
+                    path: RoutersConstants.home,
+                  );
+                },
                 child: BodyText(
                   text: LocaleKeys.succes_advert_advertAdded,
                 ),

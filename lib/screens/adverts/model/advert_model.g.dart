@@ -17,10 +17,13 @@ AdvertModel _$AdvertModelFromJson(Map<String, dynamic> json) => AdvertModel(
       advertType: json['advertType'] as String?,
       advertTime: json['advertTime'] as String?,
       hasMessage: json['hasMessage'] as bool?,
+      adminMessage: json['adminMessage'] as String?,
       homeSlider: json['homeSlider'] as bool?,
       approved: json['approved'] as bool?,
       ownerMail: json['ownerMail'] as String?,
       ownerUid: json['ownerUid'] as String?,
+      stoppedByOwner: json['stoppedByOwner'] as bool?,
+      isoCountryCode: json['isoCountryCode'] as String?,
     );
 
 Map<String, dynamic> _$AdvertModelToJson(AdvertModel instance) =>
@@ -35,8 +38,11 @@ Map<String, dynamic> _$AdvertModelToJson(AdvertModel instance) =>
       'advertType': instance.advertType,
       'advertTime': instance.advertTime,
       'hasMessage': instance.hasMessage,
+      'adminMessage': instance.adminMessage,
       'homeSlider': instance.homeSlider,
       'approved': instance.approved,
       'ownerMail': instance.ownerMail,
       'ownerUid': instance.ownerUid,
+      'stoppedByOwner': instance.stoppedByOwner,
+      'isoCountryCode': instance.isoCountryCode,
     };

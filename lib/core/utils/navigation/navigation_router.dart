@@ -1,3 +1,4 @@
+import 'package:dunya_evim/core/constants/enums/advert_list_enums.dart';
 import 'package:dunya_evim/screens/adverts/view/show_advert/advert_detail/advert_owner_field/owner_profile.dart';
 import 'package:dunya_evim/screens/profile/model/user_model.dart';
 import 'package:dunya_evim/screens/profile/view/verify_email_page.dart';
@@ -12,6 +13,7 @@ import '../../../screens/add_advert/view/photo_page/photo_page.dart';
 import '../../../screens/add_advert/view/review_page/review_location/review_location.dart';
 import '../../../screens/add_advert/view/review_page/review_note/review_note.dart';
 import '../../../screens/add_advert/view/review_page/review_page.dart';
+import '../../../screens/advert_list_countries/view/advert_countries.dart';
 import '../../../screens/adverts/view/show_advert/show_advert.dart';
 import '../../../screens/auth/forget_password/pass_reset.dart';
 import '../../../screens/auth/login/view/login_page.dart';
@@ -55,6 +57,12 @@ final class NavigationRouter {
               advertOwnerModel: settings.arguments as UserModel,
             ),
             RoutersConstants.advertOwnerProfilePage);
+      case RoutersConstants.advertCountriesPage:
+        return normalNavigate(
+            AdvertCountriesPage(
+              advertListCountries: settings.arguments as AdvertListCountriesEnums,
+            ),
+            RoutersConstants.advertCountriesPage);
 
       //Add Advert
       case RoutersConstants.addAdvertDetailPage:

@@ -21,7 +21,11 @@ class ShowSliderWidget extends StatefulWidget {
 
 class _ShowSliderWidgetState extends State<ShowSliderWidget> {
   CarouselController sliderController = CarouselController();
-  int activeIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    context.read<AdvertBloc>().clearSliderIndex();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +42,14 @@ class _ShowSliderWidgetState extends State<ShowSliderWidget> {
                 enlargeCenterPage: true,
                 pageSnapping: true,
                 onPageChanged: (index, reason) {
-                  sliderController.animateToPage(index);
+                  context.read<AdvertBloc>().add(SliderIndexEvent(index));
                 },
               ),
               itemCount: state.imageList?.length ?? 0,
               itemBuilder: (context, index, pageViewIndex) {
                 final urlImage = state.imageList?[index];
                 if (urlImage != null) {
-                  return BuildSlider(urlImage:urlImage ?? '');
+                  return BuildSlider(urlImage: urlImage ?? '');
                 } else {
                   return Center(
                     child: CircularProgressIndicator.adaptive(),
@@ -76,7 +80,7 @@ class _ShowSliderWidgetState extends State<ShowSliderWidget> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.white)
-                                  .withOpacity(activeIndex == index ? 0.9 : 0.4)),
+                                  .withOpacity(state.sliderIndex == index ? 0.9 : 0.4)),
                         ),
                       );
                     }),
@@ -87,14 +91,10 @@ class _ShowSliderWidgetState extends State<ShowSliderWidget> {
       },
     );
   }
-
 }
 
 class BuildSlider extends StatelessWidget {
-  const BuildSlider({
-    super.key,
-    required this.urlImage
-  });
+  const BuildSlider({super.key, required this.urlImage});
 
   final String urlImage;
 
@@ -107,7 +107,7 @@ class BuildSlider extends StatelessWidget {
         urlImage,
       ),
       loadingBuilder: (context, event) {
-        return const CircularProgressIndicator.adaptive();
+        return Center(child: const CircularProgressIndicator.adaptive());
       },
       errorBuilder: (context, exception, stackTrace) {
         return Center(

@@ -35,6 +35,7 @@ class AddAdvertState extends Equatable {
     this.uploadTask,
     this.photoUrlUploaded,
     this.advertDatasUploaded,
+    this.sliderIndex,
   });
   final Status? status;
   final CurrencyTextInputFormatter? currencyTextInputFormatter;
@@ -68,41 +69,45 @@ class AddAdvertState extends Equatable {
   final UploadTask? uploadTask;
   final Status? photoUrlUploaded;
   final Status? advertDatasUploaded;
+  final int? sliderIndex;
   @override
-  List<Object?> get props => [
-        status,
-        currencyTextInputFormatter,
-        currencyIcon,
-        advertTypeEnums,
-        hasGarageEnums,
-        citizenshipRightsEnums,
-        canVideoCallEnums,
-        inSiteEnums,
-        furnitureEnums,
-        numberOfRooms,
-        address,
-        ageOfConstruction,
-        city,
-        country,
-        countryCode,
-        state,
-        floorInConstruction,
-        totalFloorInConstruction,
-        heatingSystem,
-        latitude,
-        longitude,
-        livingArea,
-        note,
-        price,
-        title,
-        docId,
-        userCurrentPosition,
-        files,
-        photosUrlList,
-        uploadTask,
-        photoUrlUploaded,
-        advertDatasUploaded,
-      ];
+  List<Object?> get props {
+    return [
+      status,
+      currencyTextInputFormatter,
+      currencyIcon,
+      advertTypeEnums,
+      hasGarageEnums,
+      citizenshipRightsEnums,
+      canVideoCallEnums,
+      inSiteEnums,
+      furnitureEnums,
+      numberOfRooms,
+      address,
+      ageOfConstruction,
+      city,
+      country,
+      countryCode,
+      state,
+      floorInConstruction,
+      totalFloorInConstruction,
+      heatingSystem,
+      latitude,
+      longitude,
+      livingArea,
+      note,
+      price,
+      title,
+      docId,
+      userCurrentPosition,
+      files,
+      photosUrlList,
+      uploadTask,
+      photoUrlUploaded,
+      advertDatasUploaded,
+      sliderIndex,
+    ];
+  }
 
   AddAdvertState copyWith({
     Status? status,
@@ -137,6 +142,7 @@ class AddAdvertState extends Equatable {
     UploadTask? uploadTask,
     Status? photoUrlUploaded,
     Status? advertDatasUploaded,
+    int? sliderIndex,
   }) {
     return AddAdvertState(
       status: status ?? this.status,
@@ -171,9 +177,11 @@ class AddAdvertState extends Equatable {
       uploadTask: uploadTask ?? this.uploadTask,
       photoUrlUploaded: photoUrlUploaded ?? this.photoUrlUploaded,
       advertDatasUploaded: advertDatasUploaded ?? this.advertDatasUploaded,
+      sliderIndex: sliderIndex ?? this.sliderIndex,
     );
   }
 }
+
 final class AddAdvertInitial extends AddAdvertState {
   @override
   List<Object?> get props => [];

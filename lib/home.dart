@@ -1,7 +1,10 @@
 import 'package:dunya_evim/core/base/extension/app_extension.dart';
+import 'package:dunya_evim/core/constants/enums/bloc_enums.dart';
 import 'package:dunya_evim/screens/profile/bloc/profile_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'core/constants/enums/user_enums.dart';
 import 'core/constants/routers/routers.dart';
 import 'core/utils/navigation/navigation_service.dart';
 import 'core/utils/translation/locale_keys.g.dart';
@@ -9,7 +12,7 @@ import 'screens/auth/login/bloc/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'pages/advert_list/title_search_advert.dart';
-import 'pages/drawerpage.dart';
+import 'screens/drawer/view/drawerpage.dart';
 import 'screens/my_adverts/view/my_advert_list.dart';
 import 'pages/my_profile_page/my_favorite_list/my_favorite_list_page.dart';
 import 'screens/home_page/view/home_page_view.dart';
@@ -80,7 +83,11 @@ class _HomePageState extends State<HomePage> with HomeMixin {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
       builder: (context, state) {
-        if (state.userCredential?.user != null) {
+        if (state.status == Status.loading) {
+          return Center(
+            child: CircularProgressIndicator.adaptive(),
+          );
+        } else if (state.userCredential != null) {
           context.read<ProfileBloc>().add(FetchProfileEvent(userId: state.userCredential?.user?.uid));
           return Scaffold(
             appBar: AppBar(
@@ -97,7 +104,7 @@ class _HomePageState extends State<HomePage> with HomeMixin {
               backgroundColor: context.colorScheme.surface,
               screenTransitionAnimation: ScreenTransitionAnimation(curve: Curves.linear),
               screens: _pageList(),
-              items: navBarsItem(),
+              items: _navBarsItem(),
             ),
           );
         } else {
@@ -123,7 +130,7 @@ class _HomePageState extends State<HomePage> with HomeMixin {
                 curve: Curves.linear,
               ),
               screens: _pageListWithoutLogin(),
-              items: navBarsItemWithoutLogin(),
+              items: _navBarsItemWithoutLogin(),
             ),
           );
         }

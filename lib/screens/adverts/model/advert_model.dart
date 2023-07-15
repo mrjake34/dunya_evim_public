@@ -23,6 +23,7 @@ class AdvertModel extends Equatable {
     this.ownerMail,
     this.ownerUid,
     this.stoppedByOwner,
+    this.isoCountryCode,
   });
 
   final String? title;
@@ -41,6 +42,7 @@ class AdvertModel extends Equatable {
   final String? ownerMail;
   final String? ownerUid;
   final bool? stoppedByOwner;
+  final String? isoCountryCode;
 
   @override
   List<Object?> get props {
@@ -61,6 +63,7 @@ class AdvertModel extends Equatable {
       ownerMail,
       ownerUid,
       stoppedByOwner,
+      isoCountryCode
     ];
   }
 
@@ -85,6 +88,7 @@ class AdvertModel extends Equatable {
     String? ownerMail,
     String? ownerUid,
     bool? stoppedByOwner,
+    String? isoCountryCode,
   }) {
     return AdvertModel(
       title: title ?? this.title,
@@ -103,6 +107,7 @@ class AdvertModel extends Equatable {
       ownerMail: ownerMail ?? this.ownerMail,
       ownerUid: ownerUid ?? this.ownerUid,
       stoppedByOwner: stoppedByOwner ?? this.stoppedByOwner,
+      isoCountryCode: isoCountryCode ?? this.isoCountryCode,
     );
   }
 }

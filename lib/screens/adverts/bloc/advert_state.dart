@@ -1,41 +1,40 @@
-
 part of 'advert_bloc.dart';
 
-final class AdvertState extends Equatable {
+class AdvertState extends Equatable {
   AdvertState({
     this.advertList,
     this.advertDetailModel,
     this.advertOwnerModel,
     this.imageList,
     this.status,
-
+    this.sliderIndex,
   });
-  final List<QueryDocumentSnapshot<AdvertModel?>>? advertList;
+  final List<AdvertModel>? advertList;
   final AdvertDetailModel? advertDetailModel;
   final UserModel? advertOwnerModel;
   final List<dynamic>? imageList;
   final Status? status;
-
+  final int? sliderIndex;
 
   @override
-  List<Object?> get props => [
+  List<Object?> get props {
+    return [
       advertList,
       advertDetailModel,
       advertOwnerModel,
       imageList,
       status,
- 
+      sliderIndex,
     ];
+  }
 
   AdvertState copyWith({
-    List<QueryDocumentSnapshot<AdvertModel?>>? advertList,
+    List<AdvertModel>? advertList,
     AdvertDetailModel? advertDetailModel,
     UserModel? advertOwnerModel,
     List<dynamic>? imageList,
     Status? status,
-    CurrencyTextInputFormatter? currencyTextInputFormatter,
-    Icon? currencyIcon,
-    AdvertDetailModel? addNewAdvert,
+    int? sliderIndex,
   }) {
     return AdvertState(
       advertList: advertList ?? this.advertList,
@@ -43,7 +42,7 @@ final class AdvertState extends Equatable {
       advertOwnerModel: advertOwnerModel ?? this.advertOwnerModel,
       imageList: imageList ?? this.imageList,
       status: status ?? this.status,
+      sliderIndex: sliderIndex ?? this.sliderIndex,
     );
   }
 }
-

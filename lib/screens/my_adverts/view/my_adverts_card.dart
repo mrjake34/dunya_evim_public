@@ -5,6 +5,7 @@ import 'package:dunya_evim/core/constants/size/paddings.dart';
 import 'package:dunya_evim/core/utils/navigation/navigation_service.dart';
 import 'package:dunya_evim/core/utils/translation/locale_keys.g.dart';
 import 'package:dunya_evim/screens/adverts/model/advert_model.dart';
+import 'package:dunya_evim/screens/my_adverts/bloc/my_adverts_bloc.dart';
 import 'package:dunya_evim/src/sheets/fixed_size_modal_bottom_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,7 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/size/radius.dart';
 import '../../edit_advert/bloc/edit_advert_bloc.dart';
+import '../../profile/bloc/profile_bloc.dart';
 part 'action_button_bottom_sheet.dart';
+part 'action_button_bottom_sheet_mixin.dart';
 
 class MyAdvertCard extends StatelessWidget {
   final AdvertModel? _advert;
@@ -126,7 +129,7 @@ class MyAdvertCard extends StatelessWidget {
                   if (_advert != null) {
                     FixedSizeModalBottomSheet().openCustomModalSheet(
                       context: context,
-                      widget: ActionButtonBottomSheet(
+                      widget: _ActionButtonBottomSheet(
                         model: _advert!,
                       ),
                     );

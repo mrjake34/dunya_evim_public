@@ -17,6 +17,7 @@ class RoutersConstants {
   static const advertNotePage = '/advertNotePage';
   static const advertLocationPage = '/advertLocationPage';
   static const String advertOwnerProfilePage = '/advertOwnerProfilePage';
+  static const advertCountriesPage = '/advertCountriesPage';
 
   //Add Advert
   static const String addAdvertDetailPage = '/addAdvertDetailPage';

@@ -5,7 +5,6 @@ import '../../../../core/constants/size/paddings.dart';
 import '../../../../core/utils/translation/locale_keys.g.dart';
 import '../../../../src/cards/advert_list_card.dart';
 import '../../bloc/advert_bloc.dart';
-import '../../model/advert_model.dart';
 
 class AdvertsList extends StatefulWidget {
   const AdvertsList({Key? key}) : super(key: key);
@@ -31,7 +30,7 @@ class _AdvertsListState extends State<AdvertsList> {
               padding: const EdgeInsets.symmetric(horizontal: AppPadding.pagePadding),
               itemCount: state.advertList?.length ?? 0,
               itemBuilder: (context, index) {
-                AdvertModel? advertModel = state.advertList?[index].data();
+                final advertModel = state.advertList?[index];
                 return AdvertListCard(
                   model: advertModel,
                 );

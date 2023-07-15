@@ -29,7 +29,7 @@ class AdvertSlider extends StatelessWidget {
                 shrinkWrap: true,
                 itemCount: state.advertList?.length ?? 0,
                 itemBuilder: (context, index) {
-                  AdvertModel? model = state.advertList?[index].data();
+                  final model = state.advertList?[index];
                   return SizedBox(
                     width: 150,
                     child: Card(

@@ -1,8 +1,7 @@
 part of 'login_page.dart';
 
-class PasswordTextField extends StatelessWidget {
-  const PasswordTextField({
-    super.key,
+class _PasswordTextField extends StatelessWidget {
+  const _PasswordTextField({
     required this.passwordController,
   });
 
@@ -44,9 +43,8 @@ class PasswordTextField extends StatelessWidget {
   }
 }
 
-class EmailTextField extends StatelessWidget {
-  const EmailTextField({
-    super.key,
+class _EmailTextField extends StatelessWidget {
+  const _EmailTextField({
     required this.emailController,
   });
 

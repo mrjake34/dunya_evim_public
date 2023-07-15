@@ -7,13 +7,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoder2/geocoder2.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../../core/base/class/base_bloc.dart';
 import '../../../../../core/constants/enums/advert_enums.dart';
 import '../../../../../core/constants/enums/bloc_enums.dart';
-import '../../../../../core/constants/prefs.dart';
 import '../../adverts/model/advert_detail_model.dart';
 part 'add_advert_event.dart';
 part 'add_advert_state.dart';
@@ -69,6 +68,14 @@ final class AddAdvertBloc extends BaseBloc<AddAdvertEvent, AddAdvertState> {
     on<SendAdvertData>((event, emit) async {
       await uploadPhoto(event);
     });
+    on<SliderIndexEvent>((event, emit) {
+      if (event.index != null) {
+        safeEmit(state.copyWith(sliderIndex: event.index));
+      }
+    });
+  }
+   void clearSliderIndex() {
+    safeEmit(state.copyWith(sliderIndex: 0));
   }
   void clear() {
     safeEmit(AddAdvertInitial());
@@ -86,25 +93,24 @@ final class AddAdvertBloc extends BaseBloc<AddAdvertEvent, AddAdvertState> {
 
   void addNewAdvertDetail(AddNewAdvertDetailEvent event) {
     if (event.title != null ||
-    event.price != null ||
-    event.livingArea != null ||
-    event.ageOfConstruction != null ||
-    event.floorInConstruction != null ||
-    event.totalFloorInConstruction != null ||
-    event.heatingSystem != null) {
-  safeEmit(
-    state.copyWith(
-      title: event.title,
-      price: event.price,
-      livingArea: event.livingArea,
-      ageOfConstruction: event.ageOfConstruction,
-      floorInConstruction: event.floorInConstruction,
-      totalFloorInConstruction: event.totalFloorInConstruction,
-      heatingSystem: event.heatingSystem,
-    ),
-  );
-}
-
+        event.price != null ||
+        event.livingArea != null ||
+        event.ageOfConstruction != null ||
+        event.floorInConstruction != null ||
+        event.totalFloorInConstruction != null ||
+        event.heatingSystem != null) {
+      safeEmit(
+        state.copyWith(
+          title: event.title,
+          price: event.price,
+          livingArea: event.livingArea,
+          ageOfConstruction: event.ageOfConstruction,
+          floorInConstruction: event.floorInConstruction,
+          totalFloorInConstruction: event.totalFloorInConstruction,
+          heatingSystem: event.heatingSystem,
+        ),
+      );
+    }
   }
 
   void addAdvertType(AddAdvertTypeEvent event) {
@@ -166,20 +172,26 @@ final class AddAdvertBloc extends BaseBloc<AddAdvertEvent, AddAdvertState> {
   Future<void> getAddressFromLatLng(GetAddressFromLatLngEvent event) async {
     safeEmit(state.copyWith(status: Status.loading));
     if (event.latitude != null && event.longitude != null) {
-      final position = await Geocoder2.getDataFromCoordinates(latitude: event.latitude!, longitude: event.longitude!, googleMapApiKey: mapsApi);
-      if (position.toString().isNotEmpty) {
-        safeEmit(
-          state.copyWith(
-            address: position.address,
-            city: position.city,
-            country: position.country,
-            state: position.state,
-            countryCode: position.countryCode,
-            latitude: event.latitude,
-            longitude: event.longitude,
-            status: Status.success,
-          ),
-        );
+      final List<Placemark> position;
+      try {
+        position = await placemarkFromCoordinates(event.latitude!, event.longitude!);
+        if (position.isNotEmpty) {
+          safeEmit(
+            state.copyWith(
+              address:
+                  '${position.first.country} / ${position.first.administrativeArea} / ${position.first.subAdministrativeArea} / ${position.first.locality}',
+              city: position.first.administrativeArea,
+              country: position.first.country,
+              state: position.first.subAdministrativeArea,
+              countryCode: position.first.isoCountryCode,
+              latitude: event.latitude,
+              longitude: event.longitude,
+              status: Status.success,
+            ),
+          );
+        }
+      } on Exception catch (e) {
+        throw Exception(e);
       }
     } else {
       safeEmit(state.copyWith(status: Status.failed));
@@ -262,6 +274,7 @@ final class AddAdvertBloc extends BaseBloc<AddAdvertEvent, AddAdvertState> {
         smallImageUrl: state.photosUrlList?.first,
         docId: state.docId,
         country: state.country,
+        isoCountryCode: state.countryCode,
         advertType: state.advertTypeEnums?.value,
         advertTime: DateFormat("dd-MM-yyyy HH:mm").format(DateTime.now()),
         hasMessage: false,
@@ -271,12 +284,12 @@ final class AddAdvertBloc extends BaseBloc<AddAdvertEvent, AddAdvertState> {
         ownerUid: event.uid,
       );
       final docRef = FirebaseService().advertsCollection.doc(state.docId);
-      final colRef = docRef.collection(FireStoreEnums.data.value);
+      final colRef = docRef.collection(FirebaseEnums.data.value);
       try {
         await docRef.update(advertModel.toJson());
-        await colRef.doc(FireStoreEnums.advertDetails.value).set(advertDetailModel.toJson());
-        await colRef.doc(FireStoreEnums.imageList.value).set({
-          FireStoreEnums.urlList.value: state.photosUrlList,
+        await colRef.doc(FirebaseEnums.advertDetails.value).set(advertDetailModel.toJson());
+        await colRef.doc(FirebaseEnums.imageList.value).set({
+          FirebaseEnums.urlList.value: state.photosUrlList,
         });
       } on Exception {
         safeEmit(state.copyWith(advertDatasUploaded: Status.failed));
@@ -293,11 +306,11 @@ final class AddAdvertBloc extends BaseBloc<AddAdvertEvent, AddAdvertState> {
       String? docId;
 
       docId = await FirebaseService().advertsCollection.add({
-        FireStoreEnums.ownerUid.value: event.uid,
+        FirebaseEnums.ownerUid.value: event.uid,
       }).then((value) => value.id);
       if (docId != null) {
         final fireStorageRef =
-            await FirebaseService().firebaseStorage.ref(FireStoreEnums.users.value).child("${event.uid}/${FireStoreEnums.adverts.value}/${docId}");
+            await FirebaseService().firebaseStorage.ref(FirebaseEnums.users.value).child("${event.uid}/${FirebaseEnums.adverts.value}/${docId}");
         final images = await fireStorageRef.listAll();
         if (images.items.isNotEmpty) {
           for (var item in images.items) {

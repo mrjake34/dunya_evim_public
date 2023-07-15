@@ -184,6 +184,11 @@ abstract class  LocaleKeys {
   static const advert_advertReviewProcess = 'advert.advertReviewProcess';
   static const advert_advertRejected = 'advert.advertRejected';
   static const advert_advertDeleteAlert = 'advert.advertDeleteAlert';
+  static const advert_success_successAdvertUpdated = 'advert.success.successAdvertUpdated';
+  static const advert_success_successAdvertRemoved = 'advert.success.successAdvertRemoved';
+  static const advert_success_successAdvertListingStopped = 'advert.success.successAdvertListingStopped';
+  static const advert_success_successAdvertListingStarted = 'advert.success.successAdvertListingStarted';
+  static const advert_success = 'advert.success';
   static const advert = 'advert';
   static const advertList_advertTypes_forSellApartment = 'advertList.advertTypes.forSellApartment';
   static const advertList_advertTypes_forSellVilla = 'advertList.advertTypes.forSellVilla';
@@ -229,5 +234,16 @@ abstract class  LocaleKeys {
   static const advertList_citizenshipRights_citizenshipRightsCertainConditions = 'advertList.citizenshipRights.citizenshipRightsCertainConditions';
   static const advertList_citizenshipRights = 'advertList.citizenshipRights';
   static const advertList = 'advertList';
+  static const countries_usa = 'countries.usa';
+  static const countries_gb = 'countries.gb';
+  static const countries_canada = 'countries.canada';
+  static const countries_germany = 'countries.germany';
+  static const countries_netherlands = 'countries.netherlands';
+  static const countries_belgium = 'countries.belgium';
+  static const countries_poland = 'countries.poland';
+  static const countries_romania = 'countries.romania';
+  static const countries_france = 'countries.france';
+  static const countries_italy = 'countries.italy';
+  static const countries = 'countries';
 
 }

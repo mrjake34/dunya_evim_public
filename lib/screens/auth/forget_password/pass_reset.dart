@@ -42,29 +42,32 @@ class _PassResetState extends State<PassReset> with PassResetMixin {
           }
         },
         child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppPadding.pagePadding),
-            child: FormBuilder(
-              autoFocusOnValidationFailure: true,
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    LocaleKeys.mainText_resetPasswordEmailInfo.tr(),
-                    style: TextStyle(
-                      fontSize: 20,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 600),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppPadding.pagePadding),
+              child: FormBuilder(
+                autoFocusOnValidationFailure: true,
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      LocaleKeys.mainText_resetPasswordEmailInfo.tr(),
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  EmailTextField(emailController: emailController),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  PassResetButton(formKey: formKey, emailController: emailController),
-                ],
+                    const SizedBox(height: 20),
+                    EmailTextField(emailController: emailController),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    PassResetButton(formKey: formKey, emailController: emailController),
+                  ],
+                ),
               ),
             ),
           ),

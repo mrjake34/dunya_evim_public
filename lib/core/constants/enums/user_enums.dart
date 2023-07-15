@@ -1,5 +1,6 @@
 enum UserEnums {
   userMail('userMail'),
+  password('password'),
   userBio('userBio'),
   userPP('.userpp.jpg'),
   profilePhoto('profilePhoto'),

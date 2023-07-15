@@ -13,7 +13,7 @@ final class HomePageBloc extends BaseBloc<HomePageEvent, HomePageState> {
   HomePageBloc() : super(HomePageState()) {
     on<FetchBlogsEvent>((event, emit) async {
       safeEmit(state.copyWith(status: Status.loading));
-      final blogs = await FirebaseService.instance.blogCollection.where(FireStoreEnums.approved.value, isEqualTo: true).get();
+      final blogs = await FirebaseService.instance.blogCollection.where(FirebaseEnums.approved.value, isEqualTo: true).get();
       if (blogs.docs.isNotEmpty) {
         final blocList = blogs.docs;
         List<BlogModel> newList = [];

@@ -5,11 +5,11 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:dunya_evim/core/base/firebase/firebase_service.dart';
 import 'package:dunya_evim/core/constants/enums/firebase_enums.dart';
 import 'package:dunya_evim/core/constants/enums/user_enums.dart';
-import 'package:dunya_evim/screens/adverts/bloc/advert_bloc.dart';
 import 'package:dunya_evim/screens/profile/model/user_model.dart';
 import 'package:dunya_evim/screens/profile/service/profile_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../core/base/class/base_bloc.dart';
 import '../../../core/constants/enums/bloc_enums.dart';
 import '../../adverts/model/advert_model.dart';
 import '../../adverts/service/advert_service.dart';
@@ -66,7 +66,7 @@ final class ProfileBloc extends BaseBloc<ProfileEvent, ProfileState> {
   Future<void> addAdvertToMyAdvertList(String? docId) async {
     if (docId != null) {
       await FirebaseService.instance.userCollection.doc(state.userModel?.uid).update({
-        FireStoreEnums.userAdvertList.value: FieldValue.arrayUnion([docId])
+        FirebaseEnums.userAdvertList.value: FieldValue.arrayUnion([docId])
       });
       if (state.userModel?.uid != null) {
         await fetchProfile(state.userModel!.uid);
@@ -93,7 +93,7 @@ final class ProfileBloc extends BaseBloc<ProfileEvent, ProfileState> {
     if (file != null) {
       final path = '${state.userModel?.uid}/${UserEnums.profilePhoto.value}/${UserEnums.userPP.value}';
       final filePath = File(file.path);
-      final ref = FirebaseService.instance.firebaseStorage.ref(FireStoreEnums.users.value).child(path);
+      final ref = FirebaseService.instance.firebaseStorage.ref(FirebaseEnums.users.value).child(path);
 
       final uploadTask = ref.putFile(filePath);
 
@@ -139,21 +139,10 @@ final class ProfileBloc extends BaseBloc<ProfileEvent, ProfileState> {
 
   Future<void> fetchMyAdverts(List<String>? advertList) async {
     safeEmit(state.copyWith(status: Status.loading));
-    List<AdvertModel> myAdverts = [];
     if (advertList != null) {
-      final response = await AdvertService().fectAdvertModelList();
-      for (var element in advertList) {
-        final doc = await response.doc(element).get();
-
-        if (doc.exists) {
-          myAdverts.add(doc.data()!);
-        }
-      }
-      if (myAdverts.isNotEmpty) {
-        myAdverts.sort(
-          (a, b) => b.advertTime!.compareTo(a.advertTime!),
-        );
-        return safeEmit(state.copyWith(myAdvertList: myAdverts, status: Status.success));
+      final response = await AdvertService().fectUserAdvertModelList(advertList);
+      if (response != null) {
+        return safeEmit(state.copyWith(myAdvertList: response, status: Status.success));
       }
     } else {
       return safeEmit(state.copyWith(status: Status.failed));

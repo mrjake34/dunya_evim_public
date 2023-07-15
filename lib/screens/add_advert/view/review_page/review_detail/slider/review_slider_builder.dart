@@ -18,9 +18,12 @@ class ReviewSliderBuilder extends StatefulWidget {
 }
 
 class _ReviewSliderBuilderState extends State<ReviewSliderBuilder> {
-  CarouselController sliderController = CarouselController();
-  int activeIndex = 0;
-
+  final CarouselController sliderController = CarouselController();
+  @override
+  void initState() {
+    super.initState();
+    context.read<AddAdvertBloc>().clearSliderIndex();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,13 @@ class _ReviewSliderBuilderState extends State<ReviewSliderBuilder> {
                 enableInfiniteScroll: false,
                 enlargeCenterPage: true,
                 pageSnapping: true,
-                onPageChanged: (index, reason) => setState(() => activeIndex = index),
+                onPageChanged: (index, reason) {
+                  context.read<AddAdvertBloc>().add(
+                        SliderIndexEvent(
+                          index,
+                        ),
+                      );
+                },
               ),
               itemCount: state.files?.length ?? 0,
               itemBuilder: (context, index, realIndex) {
@@ -73,7 +82,7 @@ class _ReviewSliderBuilderState extends State<ReviewSliderBuilder> {
                         decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.white)
-                                .withOpacity(activeIndex == index ? 0.9 : 0.4)),
+                                .withOpacity(state.sliderIndex == index ? 0.9 : 0.4)),
                       ),
                     );
                   },

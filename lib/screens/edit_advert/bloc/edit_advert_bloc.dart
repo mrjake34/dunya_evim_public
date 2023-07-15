@@ -1,22 +1,21 @@
 import 'dart:io';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:dunya_evim/screens/adverts/bloc/advert_bloc.dart';
 import 'package:dunya_evim/screens/adverts/model/advert_detail_model.dart';
 import 'package:dunya_evim/screens/adverts/service/advert_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoder2/geocoder2.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../core/base/class/base_bloc.dart';
 import '../../../core/base/firebase/firebase_service.dart';
 import '../../../core/constants/enums/advert_enums.dart';
 import '../../../core/constants/enums/bloc_enums.dart';
 import '../../../core/constants/enums/firebase_enums.dart';
-import '../../../core/constants/prefs.dart';
 import '../../adverts/model/advert_model.dart';
 
 part 'edit_advert_event.dart';
@@ -90,7 +89,7 @@ final class EditAdvertBloc extends BaseBloc<EditAdvertEvent, EditAdvertState> {
       if (response?.data() != null && imageResponse?.data() != null) {
         final model = AdvertDetailModel.fromJson(response!.data()!);
         final List<dynamic>? imageList;
-        imageList = imageResponse?.data()?[FireStoreEnums.urlList.value] as List<dynamic>;
+        imageList = imageResponse?.data()?[FirebaseEnums.urlList.value] as List<dynamic>;
         safeEmit(state.copyWith(status: Status.success, model: model, photosUrlList: imageList, pathList: imageList));
       }
     } else {
@@ -189,15 +188,16 @@ final class EditAdvertBloc extends BaseBloc<EditAdvertEvent, EditAdvertState> {
   Future<void> getAddressFromLatLng(GetAddressFromLatLngEvent event) async {
     safeEmit(state.copyWith(status: Status.loading));
     if (event.latitude != null && event.longitude != null) {
-      final position = await Geocoder2.getDataFromCoordinates(latitude: event.latitude!, longitude: event.longitude!, googleMapApiKey: mapsApi);
+      final position = await placemarkFromCoordinates(event.latitude!, event.longitude!);
       if (position.toString().isNotEmpty) {
         safeEmit(
           state.copyWith(
-            address: position.address,
-            city: position.city,
-            country: position.country,
-            state: position.state,
-            countryCode: position.countryCode,
+            address:
+                '${position.first.country} / ${position.first.administrativeArea} / ${position.first.subAdministrativeArea} / ${position.first.locality}',
+            city: position.first.administrativeArea,
+            country: position.first.country,
+            state: position.first.subAdministrativeArea,
+            countryCode: position.first.isoCountryCode,
             latitude: event.latitude,
             longitude: event.longitude,
             status: Status.success,
@@ -279,6 +279,7 @@ final class EditAdvertBloc extends BaseBloc<EditAdvertEvent, EditAdvertState> {
         smallImageUrl: state.photosUrlList?.first ?? state.photosUrlList?.first,
         docId: state.docId ?? state.model?.id,
         country: state.country ?? state.model?.country,
+        isoCountryCode: state.countryCode,
         advertType: state.advertTypeEnums?.value ?? state.model?.advertType,
         advertTime: DateFormat("dd-MM-yyyy HH:mm").format(DateTime.now()),
         hasMessage: false,
@@ -288,12 +289,12 @@ final class EditAdvertBloc extends BaseBloc<EditAdvertEvent, EditAdvertState> {
         ownerUid: event.uid,
       );
       final docRef = FirebaseService().advertsCollection.doc(state.docId);
-      final colRef = docRef.collection(FireStoreEnums.data.value);
+      final colRef = docRef.collection(FirebaseEnums.data.value);
       try {
         await docRef.update(advertModel.toJson());
-        await colRef.doc(FireStoreEnums.advertDetails.value).set(advertDetailModel.toJson());
-        await colRef.doc(FireStoreEnums.imageList.value).set({
-          FireStoreEnums.urlList.value: state.photosUrlList,
+        await colRef.doc(FirebaseEnums.advertDetails.value).set(advertDetailModel.toJson());
+        await colRef.doc(FirebaseEnums.imageList.value).set({
+          FirebaseEnums.urlList.value: state.photosUrlList,
         });
       } on Exception {
         safeEmit(state.copyWith(advertDatasUploaded: Status.failed));
@@ -307,11 +308,11 @@ final class EditAdvertBloc extends BaseBloc<EditAdvertEvent, EditAdvertState> {
   Future<void> uploadPhoto(SendAdvertData event) async {
     safeEmit(state.copyWith(photoUrlUploaded: Status.loading));
     if (event.uid != null && state.files != null) {
-
-      
       if (state.model?.id != null) {
-        final fireStorageRef =
-            await FirebaseService().firebaseStorage.ref(FireStoreEnums.users.value).child("${event.uid}/${FireStoreEnums.adverts.value}/${state.model?.id}");
+        final fireStorageRef = await FirebaseService()
+            .firebaseStorage
+            .ref(FirebaseEnums.users.value)
+            .child("${event.uid}/${FirebaseEnums.adverts.value}/${state.model?.id}");
         for (var file in state.files!) {
           final uploadTask = fireStorageRef.child('${file.name}.jpg').putFile(File(file.path));
           final List<String> newList = List.from(state.photosUrlList ?? []);
@@ -338,27 +339,27 @@ final class EditAdvertBloc extends BaseBloc<EditAdvertEvent, EditAdvertState> {
 
   Future<void> deletePhotoFromStorage(int index) async {
     final docRef = FirebaseService().advertsCollection.doc(state.model?.id);
-    final colRef = docRef.collection(FireStoreEnums.data.value);
+    final colRef = docRef.collection(FirebaseEnums.data.value);
     final photo = state.pathList?.elementAt(index).toString();
 
     if (photo.toString().startsWith('https')) {
       final response = await FirebaseService()
           .firebaseStorage
-          .ref(FireStoreEnums.users.value)
-          .child("${state.model?.ownerId}/${FireStoreEnums.adverts.value}/${state.model?.id}");
+          .ref(FirebaseEnums.users.value)
+          .child("${state.model?.ownerId}/${FirebaseEnums.adverts.value}/${state.model?.id}");
       if (response.name.isNotEmpty) {
         await response.listAll().then((value) => value.items[index].delete());
         final imageRef = await AdvertService().fectAdvertDetailImageList(docId: state.model!.id!);
         if (imageRef?.data() != null) {
           final List<dynamic> imageList;
-          imageList = await imageRef?.data()?[FireStoreEnums.urlList.value];
+          imageList = await imageRef?.data()?[FirebaseEnums.urlList.value];
           if (imageList.isNotEmpty) {
-          await imageList.removeAt(index);
-          await colRef.doc(FireStoreEnums.imageList.value).update({
-            FireStoreEnums.urlList.value: imageList,
-          });
-          safeEmit(state.copyWith(pathList: imageList));
-        }
+            await imageList.removeAt(index);
+            await colRef.doc(FirebaseEnums.imageList.value).update({
+              FirebaseEnums.urlList.value: imageList,
+            });
+            safeEmit(state.copyWith(pathList: imageList));
+          }
         }
       }
     } else if (photo.toString().startsWith('/data')) {

@@ -47,30 +47,49 @@ class _LoginPageState extends State<LoginPage> with LoginPageMixin {
             icon: Icon(Icons.home_outlined)),
       ),
       body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppPadding.pagePadding),
-          child: FormBuilder(
-            key: loginKey,
-            child: BlocListener<LoginBloc, LoginState>(
-              listenWhen: (previous, current) => previous.firebaseAuthErrorEnums != current.firebaseAuthErrorEnums,
-              listener: (context, state) {
-                showFirebaseAuthErrorDialogs(state);
-              },
-              child: Wrap(
-                runSpacing: AppPadding.textFieldSpace,
-                alignment: WrapAlignment.center,
-                children: [
-                  _LogoField(),
-                  EmailTextField(emailController: emailController),
-                  PasswordTextField(passwordController: passwordController),
-                  LoginButton(
-                    loginKey: loginKey,
-                    emailController: emailController,
-                    passwordController: passwordController,
-                  ),
-                  _PassResetButton(),
-                  _DoYouHaventAccount(),
-                ],
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 600),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppPadding.pagePadding),
+            child: FormBuilder(
+              key: loginKey,
+              child: BlocListener<LoginBloc, LoginState>(
+                listenWhen: (previous, current) => previous.firebaseAuthErrorEnums != current.firebaseAuthErrorEnums,
+                listener: (context, state) {
+                  showFirebaseAuthErrorDialogs(state);
+                },
+                child: Column(
+                  children: [
+                    _LogoField(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _EmailTextField(emailController: emailController),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _PasswordTextField(passwordController: passwordController),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _LoginButton(
+                      loginKey: loginKey,
+                      emailController: emailController,
+                      passwordController: passwordController,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _PassResetButton(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _DoYouHaventAccount(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

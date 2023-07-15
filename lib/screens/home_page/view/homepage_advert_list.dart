@@ -29,7 +29,7 @@ class _HomePageAdvertListState extends State<HomePageAdvertList> {
               padding: EdgeInsets.symmetric(horizontal: AppPadding.pagePadding),
               itemCount: (state.advertList?.length ?? 0) <= 5 ? state.advertList?.length : 5,
               itemBuilder: (context, index) {
-                AdvertModel? advertModel = state.advertList?[index].data();
+                final advertModel = state.advertList?[index];
                 return AdvertListCard(
                   model: advertModel,
                 );

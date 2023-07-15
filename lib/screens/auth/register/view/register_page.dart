@@ -52,32 +52,35 @@ class _RegisterPageState extends State<RegisterPage> with RegisterPageMixin {
       child: Scaffold(
         appBar: AppBar(),
         body: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: AppPadding.pagePadding),
-            child: FormBuilder(
-              key: formKey,
-              autoFocusOnValidationFailure: true,
-              child: Wrap(
-                runSpacing: AppPadding.textFieldSpace,
-                alignment: WrapAlignment.center,
-                children: <Widget>[
-                  NameField(nameController: nameController),
-                  CountryField(countryController: countryController),
-                  EmailField(emailController: emailController),
-                  PasswordField(passwordController: passwordController, password2Controller: password2Controller),
-                  RePasswordField(password2Controller: password2Controller, passwordController: passwordController),
-                  MembershipAgreement(
-                    showSnackbar: showSnackbar,
-                  ),
-                  RegisterButton(
-                    formKey: formKey,
-                    countryController: countryController,
-                    emailController: emailController,
-                    nameController: nameController,
-                    passwordController: passwordController,
-                  ),
-                  DoYouHaveAnAccount(navService: navService),
-                ],
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 600),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: AppPadding.pagePadding),
+              child: FormBuilder(
+                key: formKey,
+                autoFocusOnValidationFailure: true,
+                child: Wrap(
+                  runSpacing: AppPadding.textFieldSpace,
+                  alignment: WrapAlignment.center,
+                  children: <Widget>[
+                    NameField(nameController: nameController),
+                    CountryField(countryController: countryController),
+                    EmailField(emailController: emailController),
+                    PasswordField(passwordController: passwordController, password2Controller: password2Controller),
+                    RePasswordField(password2Controller: password2Controller, passwordController: passwordController),
+                    MembershipAgreement(
+                      showSnackbar: showSnackbar,
+                    ),
+                    RegisterButton(
+                      formKey: formKey,
+                      countryController: countryController,
+                      emailController: emailController,
+                      nameController: nameController,
+                      passwordController: passwordController,
+                    ),
+                    DoYouHaveAnAccount(navService: navService),
+                  ],
+                ),
               ),
             ),
           ),

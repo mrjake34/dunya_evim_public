@@ -65,8 +65,8 @@ class PageBuilder extends StatelessWidget {
                         if (profstate.userModel != null) {
                           if ((profstate.userModel?.myFavoriteList?.contains(widget.docId) ?? false) == true) {
                           } else {
-                            // await FirebaseFirestore.instance.collection(FireStoreEnums.users.value).doc(userMail).update({
-                            //   FireStoreEnums.favoriteList.value: FieldValue.arrayRemove([widget.docId]),
+                            // await FirebaseFirestore.instance.collection(FirebaseEnums.users.value).doc(userMail).update({
+                            //   FirebaseEnums.favoriteList.value: FieldValue.arrayRemove([widget.docId]),
                             // }).whenComplete(() {
                             //   setState(() {
                             //     inMyList = false;

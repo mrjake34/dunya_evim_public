@@ -26,7 +26,6 @@ class ShowAdvert extends StatefulWidget {
 class _ShowAdvertState extends State<ShowAdvert> with ShowAdvertMixin {
   @override
   Widget build(BuildContext context) {
-    context.read<AdvertBloc>().add(FetchAdvertDetailEvent(docId: widget.docId));
     return WillPopScope(
       onWillPop: () async {
         return true;
@@ -36,10 +35,12 @@ class _ShowAdvertState extends State<ShowAdvert> with ShowAdvertMixin {
           if (state.status == Status.success) {
             return PersistentTabView(
               context,
-              backgroundColor: context.colorScheme.surface,
+              controller: _controller,
               navBarStyle: NavBarStyle.style3,
-              items: _navBarsItem(),
+              backgroundColor: context.colorScheme.surface,
+              screenTransitionAnimation: ScreenTransitionAnimation(curve: Curves.linear),
               screens: _screensList(),
+              items: _navBarsItem(),
             );
           } else if (state.status == Status.failed) {
             return Scaffold(

@@ -31,7 +31,7 @@ class ProfilePhoto extends StatelessWidget {
                   backgroundColor: context.colorScheme.background,
                   radius: 80,
                   backgroundImage: NetworkImage(
-                    state.userModel?.ppUrl ?? '',
+                    '${state.userModel?.ppUrl}.jpg',
                   ),
                 );
               } else {

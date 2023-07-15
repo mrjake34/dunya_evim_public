@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dunya_evim/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,14 +16,16 @@ interface class FirebaseService {
   }
   Future<void> initializeFirebase() async {
     if (!_initialized) {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
       _initialized = true;
     }
   }
 
   Future<void> initializeFirebaseTest() async {
     await Firebase.initializeApp(
-        // options: FirebaseOptions(apiKey: apiKey, appId: appId, messagingSenderId: messagingSenderId, projectId: projectId)
+        options: DefaultFirebaseOptions.currentPlatform
         );
   }
 
@@ -31,7 +34,7 @@ interface class FirebaseService {
   FirebaseAuth get firebaseAuth => FirebaseAuth.instance;
   FirebaseFirestore get firebaseFirestore => FirebaseFirestore.instance;
   FirebaseStorage get firebaseStorage => FirebaseStorage.instance;
-  CollectionReference get userCollection => FirebaseFirestore.instance.collection(FireStoreEnums.users.value);
-  CollectionReference get advertsCollection => FirebaseFirestore.instance.collection(FireStoreEnums.adverts.value);
-  CollectionReference get blogCollection => FirebaseFirestore.instance.collection(FireStoreEnums.blog.value);
+  CollectionReference get userCollection => FirebaseFirestore.instance.collection(FirebaseEnums.users.value);
+  CollectionReference get advertsCollection => FirebaseFirestore.instance.collection(FirebaseEnums.adverts.value);
+  CollectionReference get blogCollection => FirebaseFirestore.instance.collection(FirebaseEnums.blog.value);
 }

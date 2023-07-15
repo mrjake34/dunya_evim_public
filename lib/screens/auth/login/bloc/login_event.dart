@@ -9,18 +9,22 @@ abstract class LoginEvent extends Equatable {
 
 class UserLoginEvent extends LoginEvent {
   final LoginRequestModel? model;
+  final String? email;
+  final String? password;
   UserLoginEvent({
     this.model,
+    this.email,
+    this.password,
   });
 
   @override
-  List<Object?> get props => [model];
+  List<Object?> get props => [model, email, password];
 }
 
 class UserLoginPasswordVisibilityEvent extends LoginEvent {}
 
 class UserLoginClearLoginErrorEvent extends LoginEvent {}
 
-
 class GetUserCurrentLocationEvent extends LoginEvent {}
+
 class GetDeviceInfoEvent extends LoginEvent {}

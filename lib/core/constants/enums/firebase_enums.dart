@@ -1,21 +1,21 @@
-enum FireStoreEnums {
+enum FirebaseEnums {
   users('users'),
   adverts('adverts'),
   ownerUid('ownerUid'),
-  datas('datas'),
   imageList('imageList'),
   data('data'),
   blog('blog'),
   advertDetails('advertDetails'),
   userAdvertList('userAdvertList'),
   favoriteList('myFavoriteList'),
+  stoppedByOwner('stoppedByOwner'),
   urlList('urlList'),
-
-  approved('approved');
+  approved('approved'),
+  isoCountryCode('isoCountryCode');
 
   final String value;
 
-  const FireStoreEnums(this.value);
+  const FirebaseEnums(this.value);
 
   @override
   String toString() => value;

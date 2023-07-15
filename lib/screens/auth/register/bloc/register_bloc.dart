@@ -1,7 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:dunya_evim/screens/adverts/bloc/advert_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../../../core/base/class/base_bloc.dart';
 import '../../../../core/base/firebase/firebase_service.dart';
 import '../../../../core/constants/enums/bloc_enums.dart';
 import '../model/register_request_model.dart';

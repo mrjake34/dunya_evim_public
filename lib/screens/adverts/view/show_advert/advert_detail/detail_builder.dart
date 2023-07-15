@@ -11,7 +11,6 @@ import '../../../../../core/constants/size/paddings.dart';
 import '../../../../../core/utils/navigation/navigation_service.dart';
 import '../../../../../core/utils/snackbar/show_snackbar.dart';
 import '../../../../../core/utils/translation/locale_keys.g.dart';
-import '../../../../profile/bloc/profile_bloc.dart';
 import '../../../../profile/model/user_model.dart';
 import '../../../bloc/advert_bloc.dart';
 
